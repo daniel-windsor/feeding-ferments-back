@@ -1,0 +1,23 @@
+version: "3"
+services: 
+  ff_back:
+    build:
+      context: ./
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./:/app:ro
+      - /app/node_modules
+    environment: 
+      - NODE_ENV=development
+      - MONGO_USER=admin
+      - MONGO_PASSWORD=test1234
+      - SESSION_SECRET=secret
+    command: yarn run dev
+  
+  mongo:
+    volumes: 
+      - mongo-db:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=test1234
