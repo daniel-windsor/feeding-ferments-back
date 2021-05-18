@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const redis = require("redis");
 const session = require("express-session");
+const admin = require("firebase-admin")
+const serviceAccount = require("./firebase_admin.json")
 
 const authRouter = require("./routes/authRoutes");
 const fermentRouter = require("./routes/fermentRoutes");
@@ -18,6 +20,10 @@ const {
   REDIS_PORT,
   SESSION_SECRET,
 } = require("./config/config");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+})
 
 let RedisStore = require("connect-redis")(session);
 let redisClient = redis.createClient({
