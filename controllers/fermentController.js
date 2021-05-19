@@ -2,13 +2,10 @@ const Ferment = require("../models/fermentModel");
 
 exports.getAllFerments = async (req, res, next) => {
   try {
-    const ferments = await Ferment.find().where({ userId: req.user._id });
-    console.log(req.user)
+    const ferments = await Ferment.find().where({ userId: req.user });
     res.status(200).json({
       status: "success",
-      data: {
-        ferments,
-      },
+      ferments,
     });
   } catch (err) {
     res.status(500).json({
@@ -37,17 +34,15 @@ exports.createFerment = async (req, res, next) => {
   try {
     const ferment = await Ferment.create({
       ...req.body,
-      userId: req.user._id,
+      userId: req.user,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       status: "success",
-      data: {
-        ferment,
-      },
+      ferment
     });
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "fail",
     });
   }

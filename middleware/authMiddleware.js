@@ -1,16 +1,21 @@
-const protect = (req, res, next) => {
-  const {user } = req.session;
+const admin = require('firebase-admin')
 
-  if (!user) {
-    return res.status(401).json({
-      status: "fail",
-      message: "Unauthorised"
-    })
+const checkAuth = (req, res, next) => {
+  if (req.headers.authorization) {
+    admin
+      .auth()
+      .verifyIdToken(req.headers.authorization)
+      .then((decodedToken) => {
+        req.user = decodedToken.uid
+        next();
+      })
+      .catch((err) => {
+        console.log(err)
+        res.status(403).send("Unauthorized");
+      });
+  } else {
+    res.status(403).send("Unauthorized");
   }
+};
 
-  req.user = user
-
-  next()
-}
-
-module.exports = protect
+module.exports = checkAuth;

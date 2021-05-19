@@ -1,35 +1,24 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const redis = require("redis");
-const session = require("express-session");
 const admin = require("firebase-admin")
 const serviceAccount = require("./firebase_admin.json")
 
 const authRouter = require("./routes/authRoutes");
 const fermentRouter = require("./routes/fermentRoutes");
 
-const protect = require("./middleware/authMiddleware")
+const checkAuth = require("./middleware/authMiddleware")
 
 const {
   MONGO_USER,
   MONGO_PASSWORD,
   MONGO_IP,
   MONGO_PORT,
-  REDIS_URL,
-  REDIS_PORT,
-  SESSION_SECRET,
 } = require("./config/config");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 })
-
-let RedisStore = require("connect-redis")(session);
-let redisClient = redis.createClient({
-  host: REDIS_URL,
-  port: REDIS_PORT,
-});
 
 const app = express();
 
@@ -46,20 +35,6 @@ mongoose
 
 app.use(cors({}));
 
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    secret: SESSION_SECRET,
-    cookie: {
-      secure: false,
-      resave: false,
-      saveUninitialized: false,
-      httpOnly: false,
-      maxAge: 600000,
-    },
-  })
-);
-
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -67,7 +42,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", authRouter);
-app.use("/ferment", protect, fermentRouter);
+app.use("/ferment", checkAuth, fermentRouter);
 
 const port = process.env.PORT || 3000;
 

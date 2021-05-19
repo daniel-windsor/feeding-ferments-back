@@ -10,11 +10,11 @@ const fermentSchema = new mongoose.Schema({
     require: [true, "Ferment must have a type"],
   },
   dob: {
-    type: String,
+    type: Date,
     require: [true, "Ferment must have a date of birth"],
   },
   userId: {
-    type: mongoose.ObjectId,
+    type: String,
     require: [true]
   }
 });
