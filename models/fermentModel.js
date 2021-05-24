@@ -13,6 +13,14 @@ const fermentSchema = new mongoose.Schema({
     type: Date,
     require: [true, "Ferment must have a date of birth"],
   },
+  frequency: {
+    type: String,
+    required:  [true, "Ferment must have a feed frequency"]
+  },
+  lastFed: {
+    type: String,
+    required: [true, "Ferment must have a last fed date"]
+  },
   userId: {
     type: String,
     require: [true]
