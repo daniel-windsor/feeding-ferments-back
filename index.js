@@ -1,13 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const admin = require("firebase-admin")
-const serviceAccount = require("./firebase_admin.json")
+const admin = require("firebase-admin");
+const serviceAccount = require("./firebase_admin.json");
 
 const authRouter = require("./routes/authRoutes");
 const fermentRouter = require("./routes/fermentRoutes");
+const directionRouter = require("./routes/directionRoutes");
 
-const checkAuth = require("./middleware/authMiddleware")
+const checkAuth = require("./middleware/authMiddleware");
 
 const {
   MONGO_USER,
@@ -17,8 +18,8 @@ const {
 } = require("./config/config");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-})
+  credential: admin.credential.cert(serviceAccount),
+});
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", authRouter);
 app.use("/ferment", checkAuth, fermentRouter);
+app.use("/directions", checkAuth, directionRouter);
 
 const port = process.env.PORT || 3000;
 

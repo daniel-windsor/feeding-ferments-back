@@ -39,7 +39,7 @@ exports.createFerment = async (req, res, next) => {
 
     return res.status(201).json({
       status: "success",
-      ferment
+      ferment,
     });
   } catch (err) {
     return res.status(500).json({
@@ -54,11 +54,9 @@ exports.editFerment = async (req, res, next) => {
       new: true,
       runValidators: true,
     });
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
-      data: {
-        ferment,
-      },
+      ferment,
     });
   } catch (err) {
     res.status(500).json({
